@@ -106,4 +106,9 @@ class mysql
             )
         );
     }
+
+    public function fetch()
+    {
+        
+    }
 }
