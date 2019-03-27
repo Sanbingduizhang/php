@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 数据库基本查询操作
  * Created by PhpStorm.
@@ -45,6 +46,9 @@ class mysql
         $conn = $this->config();
         $queryRes = mysqli_query($conn, "select * from $this->table");
         $ResArr = mysqli_fetch_all($queryRes, MYSQLI_ASSOC);
+        // 释放内存
+        mysqli_free_result($queryRes);
+        //关闭连接
         mysqli_close($conn);
         return $ResArr;
     }
@@ -53,23 +57,26 @@ class mysql
      * 获取一条数据
      * @return array|null
      */
-    public function fetchOne()
+    public function find($id)
     {
         //开启查询
         $conn = $this->config();
         $queryRes = mysqli_query($conn, "select * from $this->table limit 1");
         $ResArr = mysqli_fetch_assoc($queryRes);
+        // 释放内存
+        mysqli_free_result($queryRes);
+        //关闭连接
         mysqli_close($conn);
         return $ResArr;
     }
 
     /**
      * @param array $order 排序规则
-     * @param int $limit   每页显示条数
-     * @param int $offset  偏移量(哪一页)
+     * @param int $limit 每页显示条数
+     * @param int $offset 偏移量(哪一页)
      * @return array
      */
-    public function fetchPage($order = array(),$limit = 10,$offset = 1)
+    public function fetchPage($order = array(), $limit = 10, $offset = 1)
     {
         $sql = "select * from $this->table where 1=1 ";
         //如果有排序
@@ -89,12 +96,16 @@ class mysql
         $conn = $this->config();
         //查询总数
         $sqlcount = "select COUNT(*) as count from $this->table";
-        $queryResCount = mysqli_query($conn,$sqlcount);
+        $queryResCount = mysqli_query($conn, $sqlcount);
         $ResArrCount = mysqli_fetch_assoc($queryResCount);
 
         //查询数据
         $queryRes = mysqli_query($conn, $sql);
         $ResArr = mysqli_fetch_all($queryRes, MYSQLI_ASSOC);
+        // 释放内存
+        mysqli_free_result($queryResCount);
+        mysqli_free_result($queryRes);
+        //关闭连接
         mysqli_close($conn);
         //返回数据
         return array(
@@ -102,13 +113,13 @@ class mysql
             'pagnation' => array(
                 'page' => $limit,
                 'currentPage' => $offset,
-                'totalPage' => round($ResArrCount['count']/$limit)
+                'totalPage' => ceil($ResArrCount['count'] / $limit)
             )
         );
     }
 
     public function fetch()
     {
-        
+
     }
 }

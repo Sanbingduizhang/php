@@ -9,10 +9,10 @@ class config
     public function dbconfig()
     {
         return array(
-            'host' => '127.0.0.1',
+            'host' => '39.96.53.113',
             'dbname' => 'test',
-            'dbuser' => 'root',
-            'dbpwd' => 'root',
+            'dbuser' => 'liawen',
+            'dbpwd' => 'xiaohaizi1!',
             'port' => '3306',
         );
     }
